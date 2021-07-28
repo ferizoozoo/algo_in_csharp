@@ -1,4 +1,5 @@
 ﻿using System;
+using Trie;
 
 namespace src
 {
@@ -6,7 +7,10 @@ namespace src
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var trie = new SimpleTrie();
+            trie.Insert("hello");
+            trie.Insert("hi");
+            Console.WriteLine(trie.Find("hi").value);
         }
     }
 }

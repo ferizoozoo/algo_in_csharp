@@ -7,7 +7,10 @@ namespace Trie
         private readonly Node _root;
         public Node Root => _root;
 
-        public SimpleTrie(Node root) => _root = root;
+        public SimpleTrie()
+        {
+            _root = new Node();
+        }
 
         public void Insert(string value)
         {
