@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace BinaryMaxHeap
 {
-    //TODO: Test the whole class after implementing the Delete method
     public class Heap
     {
         private List<Node> _heap;
@@ -43,7 +42,7 @@ namespace BinaryMaxHeap
 
             int leftChildIndex = 2 * currentIndex + 1;
             int rightChildIndex = 2 * currentIndex + 2;
-            
+
             Node leftChildNode = null;
             Node rightChildNode = null;
 
@@ -72,28 +71,39 @@ namespace BinaryMaxHeap
         public Node Extract()
         {
             var extractedNode = _heap[0];
-            var lastNode = _heap[this.Length];
+            var lastNode = _heap[this.Length - 1];
             _heap[0] = lastNode;
-            _heap.RemoveAt(this.Length);
+            _heap.RemoveAt(this.Length - 1);
 
             return extractedNode;
         }
 
-        //TODO: Implement the Delete method
         public void Delete(int key)
         {
+            //Find the node
+            (int nodeIndex, Node foundNode) = this.Search(key);
 
+            //Swap found node with last node
+            _heap[nodeIndex] = _heap[this.Length];
+            _heap[this.Length - 1] = foundNode;
+
+            //Delete swapped node (foundNode)
+            _heap.RemoveAt(this.Length - 1);
+
+            //Sift down the swapped node (lastNode before deletion)
+            SiftDown(nodeIndex);
         }
 
-        public Node Search(int key)
+        public (int, Node) Search(int key)
         {
-            foreach (var node in _heap)
+            for (int index = 0; index < this.Length; index++)
             {
+                var node = _heap[index];
                 if (node.Key == key)
-                    return node;
+                    return (index, node);
             }
 
-            return null;
+            return (-1, null);
         }
     }
 }
