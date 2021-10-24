@@ -22,7 +22,7 @@ namespace RabinKarp
 
         public string RollingHash(string text)
         {
-
+            return null;
         }
     }
 }

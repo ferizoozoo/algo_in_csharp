@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BinaryMaxHeap
 {
@@ -17,22 +18,32 @@ namespace BinaryMaxHeap
         public void Insert(Node node)
         {
             _heap.Add(node);
-            SiftUp(Length);
+
+            if (this.Length == 1)
+                return;
+
+            SiftUp(this.Length - 1);
         }
 
         private void SiftUp(int nodeIndex)
         {
             int currentIndex = nodeIndex;
-            int parentIndex = (currentIndex - 2) / 2;
+
+            if (currentIndex == 0)
+                return;
+
+            int parentIndex = (int)Math.Floor((currentIndex + 1) / (double)2) - 1;
             var currentNode = _heap[currentIndex];
             var parentNode = _heap[parentIndex];
 
-            if (parentIndex > 0 && currentNode.Key > parentNode.Key)
+            if (currentNode.Key > parentNode.Key)
             {
                 _heap[parentIndex] = currentNode;
                 _heap[currentIndex] = parentNode;
-                SiftUp(currentIndex);
             }
+
+            if (parentIndex > 0)
+                SiftUp(parentIndex);
         }
 
         private void SiftDown(int nodeIndex)
@@ -71,9 +82,14 @@ namespace BinaryMaxHeap
         public Node Extract()
         {
             var extractedNode = _heap[0];
+
             var lastNode = _heap[this.Length - 1];
             _heap[0] = lastNode;
+
             _heap.RemoveAt(this.Length - 1);
+
+            if (this.Length > 0)
+                SiftDown(0);
 
             return extractedNode;
         }
@@ -83,8 +99,17 @@ namespace BinaryMaxHeap
             //Find the node
             (int nodeIndex, Node foundNode) = this.Search(key);
 
+            if (nodeIndex == -1)
+                return;
+
+            if (nodeIndex == this.Length - 1)
+            {
+                _heap.RemoveAt(this.Length - 1);
+                return;
+            }
+
             //Swap found node with last node
-            _heap[nodeIndex] = _heap[this.Length];
+            _heap[nodeIndex] = _heap[this.Length - 1];
             _heap[this.Length - 1] = foundNode;
 
             //Delete swapped node (foundNode)
@@ -104,6 +129,18 @@ namespace BinaryMaxHeap
             }
 
             return (-1, null);
+        }
+
+        public override string ToString()
+        {
+            var str = new StringBuilder();
+
+            foreach (var node in _heap)
+            {
+                str.AppendLine($"({node.Key}, {node.Value})");
+            }
+
+            return str.ToString();
         }
     }
 }
